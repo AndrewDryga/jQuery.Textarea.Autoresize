@@ -8,14 +8,7 @@
  * <code>$('textarea').autoresize(params_object);</code>
  *
  * Params can also be passed via data-api:
- * <code><textarea data-default-height="min" data-animated="false"></textarea></code>
- *
- * Available params:
- * - minHeight: minimal height for textarea, default is textarea height.
- * - maxHeight: maximal height for textarea, default is false (unlimited). If textarea content is bigger than this value, then scrollbar appears.
- * - defaultHeight: height that will be set to textarea when it loose focus. Default if false (turned off).
- * - animated: animation for focus loose/restore (works only width non-false defaultHeight values). Default is true.
- * - onResize: callback function, called each time plugin resizes textarea.
+ * <code><textarea data-default-height="min" data-animation="false"></textarea></code>
  *
  * Author: Andrew Dryga <andrew@dryga.com> <http://dryga.com>
  * License: MIT
@@ -54,8 +47,10 @@
       minHeight: this.$element.height(),
       maxHeight: ~~parseInt(this.$element.css('max-height'), 10),
       defaultHeight: false,
-      animated: true,
+      animation: true,
       heightCompensation: this.$element.outerHeight() - this.$element.height(),
+      animationDuration: 'slow',
+      animationEasing: 'swing',
       onResize: $.noop
     }, this.$element.data(), params);
 
@@ -85,11 +80,11 @@
 
       if($self.params.defaultHeight) {
         $element.on('focus.autoresize', function() {
-          $self.setHeight($self.getContentHeight(), $self.params.animated);
+          $self.setHeight($self.getContentHeight(), $self.params.animation);
         });
 
         $element.on('focusout.autoresize', function() {
-          $self.setHeight($self.params.defaultHeight, $self.params.animated);
+          $self.setHeight($self.params.defaultHeight, $self.params.animation);
         });
       }
 
@@ -143,13 +138,16 @@
       return this.limitValue(this.getMirror().height(), this.params.minHeight, this.params.maxHeight);
     },
 
-    setHeight: function(height, animated) {
-      if(animated) {
-        this.$element.stop(true).animate({height: height + this.params.heightCompensation + 'px'}, 'slow');
+    setHeight: function(height, animation) {
+    	var $this = this;
+      if(animation) {
+        this.$element.stop(true).animate({height: height + this.params.heightCompensation + 'px'}, this.params.animationDuration, this.params.animationEasing, function() {
+        	$this.params.onResize($this.$element, {height: height});
+        });
       } else {
         this.$element.height(height);
+	      this.params.onResize(this.$element, {height: height});
       }
-      this.params.onResize(this.$element, {height: height});
     },
 
     limitValue: function(value, min, max) {
