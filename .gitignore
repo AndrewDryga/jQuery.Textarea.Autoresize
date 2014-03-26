@@ -5,3 +5,4 @@
 .sublime*
 .tags
 .tags_sorted_by_file
+bower_components

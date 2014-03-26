@@ -1,6 +1,22 @@
 {
   "name": "jquery.textarea.autoresize",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "homepage": "https://github.com/AndrewDryga/jQuery.Textarea.Autoresize",
+  "authors": [
+    "Andrew Dryga <andrew@dryga.com>"
+  ],
+  "description": "This plugin resizes textarea height to match it's content height",
+  "main": "js/jquery.textarea.autoresize.js",
+  "keywords": [
+    "juqery",
+    "textarea",
+    "autoresize"
+  ],
+  "ignore": [
+    "**/.*",
+    "bower_components"
+  ],
+  "license": "MIT",
   "dependencies": {
     "jquery": "latest"
   }
